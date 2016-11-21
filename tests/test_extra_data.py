@@ -15,17 +15,7 @@ from django.utils.timezone import utc
 from django_model_extra_form.forms import DateField, TimeField, DateTimeField
 from django_model_extra_form.forms.utils import FormValidationError
 from django_model_extra_form.models import ExtraDataModelMixin
-
-
-class FakeModel(models.Model):
-
-    class Meta(object):
-        abstract = True
-        app_label = 'test'
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        return  # stop model saving
+from tests import FakeModel
 
 
 class ExtraForm(forms.Form):
