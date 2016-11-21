@@ -4,18 +4,17 @@
 
 from __future__ import unicode_literals, absolute_import
 
-from decimal import Decimal
-
 import datetime
+from decimal import Decimal
 
 import pytest
 from django import forms
 from django.db import models
 from django.utils.timezone import utc
 
-from django_model_extra_data.forms import DateField, TimeField, DateTimeField
-from django_model_extra_data.forms.utils import FormValidationError
-from django_model_extra_data.models import ExtraDataModelMixin
+from django_model_extra_form.forms import DateField, TimeField, DateTimeField
+from django_model_extra_form.forms.utils import FormValidationError
+from django_model_extra_form.models import ExtraDataModelMixin
 
 
 class FakeModel(models.Model):

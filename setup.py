@@ -45,11 +45,11 @@ if sys.version_info[0:2] < (3, 4):
 extra_requires['all'] = list(chain.from_iterable(extra_requires.values()))
 
 setup(
-    name='django-model-extra-data',
-    version=find_version('django_model_extra_data', '__init__.py'),
+    name='django-model-extra-form',
+    version=find_version('django_model_extra_form', '__init__.py'),
     author='NZME',
     author_email='sysadmin@grabone.co.nz',
-    url='https://github.com/NZME/django-model-extra-data',
+    url='https://github.com/NZME/django-model-extra-form',
     description='Flexible django model',
     long_description=read('README.rst'),
     setup_requires=['pytest-runner'],

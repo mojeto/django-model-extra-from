@@ -4,7 +4,7 @@
 
 from __future__ import unicode_literals, absolute_import
 
-from django_model_extra_data.contrib.rest_framework.field_mapping import \
+from django_model_extra_form.contrib.rest_framework.field_mapping import \
     map_form_to_serializer
 
 

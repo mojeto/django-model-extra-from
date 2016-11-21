@@ -7,7 +7,7 @@ from __future__ import unicode_literals, absolute_import
 from django.utils.lru_cache import lru_cache
 from json_encoder import json
 
-from django_model_extra_data.forms.utils import validate_form, form_data
+from django_model_extra_form.forms.utils import validate_form, form_data
 
 
 class ExtraDataModelMixin(object):

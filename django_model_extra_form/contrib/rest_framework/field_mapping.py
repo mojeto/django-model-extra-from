@@ -8,7 +8,7 @@ from django import forms
 from django.utils.six import PY34
 from rest_framework import serializers
 
-from django_model_extra_data.contrib.rest_framework.fields import FormField
+from django_model_extra_form.contrib.rest_framework.fields import FormField
 
 if PY34:
     from functools import singledispatch
