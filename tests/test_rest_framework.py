@@ -10,14 +10,13 @@ from decimal import Decimal
 import pytest
 from django import forms
 from django.utils.timezone import utc
-from rest_framework.serializers import ModelSerializer
-
 from django_model_extra_form.contrib.rest_framework.field_mapping import \
     map_form_to_serializer
 from django_model_extra_form.contrib.rest_framework.fields import FormField
 from django_model_extra_form.contrib.rest_framework.serializers import \
-    ExtraDataSerializerMixin
-from tests.test_extra_data import ExtraModel
+    ExtraFormSerializerMixin, extra_form_fields_names
+from rest_framework.serializers import ModelSerializer
+from tests.test_extra_form import ExtraModel
 
 
 class OKFormField(forms.Field):
@@ -45,11 +44,11 @@ def to_internal_value(serializer_field):
     assert value == ['ok', 'test value']
 
 
-class ExtraSerializer(ExtraDataSerializerMixin, ModelSerializer):
+class ExtraSerializer(ExtraFormSerializerMixin, ModelSerializer):
 
     class Meta(object):
         model = ExtraModel
-        fields = tuple(ExtraModel.extra_form_fields())
+        fields = tuple(extra_form_fields_names(ExtraModel))
 
 
 @pytest.fixture()
@@ -58,7 +57,8 @@ def initial_data():
             date=datetime.date(2016, 2, 29),
             time=datetime.time(1, 2, 3),
             datetime=datetime.datetime(2016, 2, 29, 1, 2, 3, tzinfo=utc),
-            string='some dummy data'
+            string='some dummy data',
+            end_datetime=datetime.datetime(2016, 3, 1, 1, 2, 3, tzinfo=utc),
         )
 
 
@@ -80,12 +80,13 @@ def extra_model_instance(initial_data):
 @pytest.fixture()
 def data(validated_data):
     dec = '{{:.{}f}}'.format(
-        ExtraModel.extra_form_class.base_fields['number'].decimal_places
+        ExtraModel.extra_targets[0][2].base_fields['number'].decimal_places
     )
     return dict(
         date=validated_data['date'].isoformat(),
         time=validated_data['time'].isoformat(),
         datetime=validated_data['datetime'].isoformat()[:19] + 'Z',
+        end_datetime=validated_data['end_datetime'].isoformat()[:19] + 'Z',
         string='some dummy data',
         number=dec.format(validated_data['number']),
     )

@@ -7,6 +7,7 @@ from __future__ import unicode_literals, absolute_import
 from collections import OrderedDict
 
 from django import forms
+from django.utils.six import iterkeys
 from django_model_extra_form.forms.utils import validate_form, form_data
 from json_encoder import json
 
@@ -58,6 +59,14 @@ class ExtraTarget(object):
     def field_names(self):
         return [n for form in self.extra_forms for n in form.field_names]
 
+    @property
+    def fields(self):
+        form_fields = OrderedDict()
+        for extra_form in self.extra_forms:
+            form_fields.update(extra_form.fields)
+
+        return form_fields
+
     def clean_data(self, data, validate=True):
         cleaned = OrderedDict()
         for form in self.extra_forms:
@@ -99,7 +108,11 @@ class ExtraForm(object):
 
     @property
     def field_names(self):
-        return [n for n in self.form_class.base_fields.keys()]
+        return [n for n in iterkeys(self.fields)]
+
+    @property
+    def fields(self):
+        return self.form_class.base_fields
 
     def clean_data(self, data, validate=True):
         form = self.form_class(data=data)
