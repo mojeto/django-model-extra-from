@@ -12,6 +12,8 @@ import pytest
 from django import forms
 from django.db import models
 from django.utils.timezone import utc
+from six import text_type
+
 from django_model_extra_form.forms import DateField, TimeField, DateTimeField
 from django_model_extra_form.forms.utils import FormValidationError
 from django_model_extra_form.models import ExtraFormMixin, ExtraForm, \
@@ -187,3 +189,39 @@ def test_extra_data_validation():
     # not present as it doesn't merge all validation exception from all forms
     # assert 'end_datetime' in messages
     # assert msg == messages['end_datetime'][0]
+
+
+def test_set_from_form_validation():
+    instance = ExtraModel()
+    msg = "'Step2Form' object has no attribute 'cleaned_data'. " \
+          "You have to call form.is_valid() or form.full_clean() first."
+    form = Step2Form(data={'number': Decimal('1.3')})
+
+    with pytest.raises(ValueError) as exc_info:
+        instance.set_from_form(form)
+
+    messages = exc_info.value
+    assert text_type(messages) == msg
+
+
+def test_set_from_form():
+    # Given
+    instance = ExtraModel()
+    assert instance.date is None
+    assert instance.time is None
+    assert instance.datetime is None
+
+    date = datetime.date(2016, 2, 29)
+    time = datetime.time(1, 2, 3)
+    dt = datetime.datetime.combine(date, time).replace(tzinfo=utc)
+    form = Step1Form(data={'date': date, 'time': time, 'datetime': dt})
+    form.full_clean()  # validate form first
+
+    # When
+    instance.set_from_form(form)
+
+    # Then
+    assert instance.date is date
+    assert instance.time is time
+    assert instance.datetime is dt
+
