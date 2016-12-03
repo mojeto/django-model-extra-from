@@ -8,8 +8,9 @@ from collections import OrderedDict
 
 from django import forms
 from django.utils.six import iterkeys
-from django_model_extra_form.forms.utils import validate_form, form_data
 from json_encoder import json
+
+from django_model_extra_form.forms.utils import validate_form, form_data
 
 
 class ExtraTargetSerializer(object):
@@ -46,7 +47,8 @@ class JSON(ExtraTargetSerializer):
 
 class ExtraTarget(object):
 
-    def __init__(self, name, *extra_forms, serializer=JSON):
+    def __init__(self, name, *extra_forms, **kwargs):
+        serializer = kwargs.get('serializer') or JSON
         assert issubclass(serializer, ExtraTargetSerializer)
         self.name = name
         self.extra_forms = tuple(
