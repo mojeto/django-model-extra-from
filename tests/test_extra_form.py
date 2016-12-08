@@ -198,7 +198,7 @@ def test_set_from_form_validation():
     form = Step2Form(data={'number': Decimal('1.3')})
 
     with pytest.raises(ValueError) as exc_info:
-        instance.set_from_form(form)
+        instance.set_data_from_form(form)
 
     messages = exc_info.value
     assert text_type(messages) == msg
@@ -218,10 +218,41 @@ def test_set_from_form():
     form.full_clean()  # validate form first
 
     # When
-    instance.set_from_form(form)
+    instance.set_data_from_form(form)
 
     # Then
     assert instance.date is date
     assert instance.time is time
     assert instance.datetime is dt
 
+
+def test_get_data_for_form():
+    # Given
+    date = datetime.date(2016, 2, 29)
+    time = datetime.time(1, 2, 3)
+    dt = datetime.datetime.combine(date, time).replace(tzinfo=utc)
+    instance = ExtraModel(date=date, time=time, datetime=dt)
+    assert instance.date is date
+    assert instance.time is time
+    assert instance.datetime is dt
+
+    # When
+    data = instance.get_data_for_form(Step1Form)
+
+    # Then
+    assert data['date'] is date
+    assert data['time'] is time
+    assert data['datetime'] is dt
+
+
+def test_get_data_for_form_default():
+    # Given
+    instance = ExtraModel()
+
+    # When
+    data = instance.get_data_for_form(Step1Form())
+
+    # Then
+    assert data['date'] is None
+    assert data['time'] is None
+    assert data['datetime'] is None

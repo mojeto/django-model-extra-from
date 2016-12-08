@@ -11,7 +11,7 @@ from django.utils.six import iterkeys
 from json_encoder import json
 
 from django_model_extra_form.forms.utils import validate_form, form_data, \
-    set_form_data_to_instance
+    set_form_data_to_instance, get_form_data_from_instance
 
 
 class ExtraTargetSerializer(object):
@@ -159,8 +159,11 @@ class ExtraFormMixin(object):
 
         return super(ExtraFormMixin, self).__getattr__(name)
 
-    def set_from_form(self, form):
+    def set_data_from_form(self, form):
         set_form_data_to_instance(form, self)
+
+    def get_data_for_form(self, form):
+        return get_form_data_from_instance(form, self)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

@@ -57,3 +57,10 @@ def form_data(form, dict_class=None):
 def set_form_data_to_instance(form, instance):
     for key, value in iteritems(form_data(form)):
         setattr(instance, key, value)
+
+
+def get_form_data_from_instance(form, instance, dict_class=None):
+    dict_class = dict_class or OrderedDict
+    return dict_class(
+        (key, getattr(instance, key)) for key in iterkeys(form.base_fields)
+    )
